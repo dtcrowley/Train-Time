@@ -9,36 +9,34 @@
   };
   firebase.initializeApp(config);
 //Initial variables
-  var dataRef = firebase.database();
-  var train = "";
-  var destination = "";
-  var firstTrain = "";
-  var frequency = "";
+  var database = firebase.database();
+  var train = ""
+  var destination = ""
+  var firstTrain = ""
+  var frequency = ""
  
   // Capture Button Click
   $("#submitBtn").on("click", function (event) {
-    
     event.preventDefault();
     //Assign input values to variables
-    train = $("#trainName").val().trim();
+    train = $("#train-name").val().trim();
     destination = $("#destination").val().trim();
     firstTrain = $("#firstTrain").val().trim();
     frequency = $("#frequency").val().trim();
 
-    // Code for the push to Firebase
-    dataRef.ref().push({
+    // Push to Firebase
+    database.ref().push({
       train: train,
       destination: destination,
       firstTrain: firstTrain,
-      frequency: frequency,
+      frequency: frequency
     });
   });
 
   // Firebase watcher + initial loader 
-  dataRef.ref().on("child_added", function (snapshot) {
+  database.ref().on("child_added", function (snapshot) {
     //Local variables; assign input values to table
-    console.log(train);
-    console.log(destination);
+
     var trainFrequency = snapshot.val().frequency;
     console.log("Frequency: " + trainFrequency);
     var trainFirst = snapshot.val().firstTrain;
@@ -52,13 +50,17 @@
     var minutesAway = trainFrequency - remainder;
     console.log("Minutes Away: " + minutesAway);
     var nextTrain = moment().add(minutesAway, "minutes");
-    console.log("NextTrain: " + nextTrain);
+    console.log("NextTrain @: " + nextTrain);
     var nextArrival = moment(nextTrain).format("HH:mm");
     console.log("Next Arrival: " + nextArrival);
     console.log("___________________________");
       
-    $("#table-data").append("<tr><td>" + snapshot.val().train + "</td><td>" + snapshot.val().desination + "</td><td>"  
-    + snapshot.val().trainFrequency + "</td><td>" +snapshot.val().nextArrival + "</td><td>" + snapshot.val().minutesAway + "</td></tr>");
+    $("#table-data").append("<tr><td>" 
+    + snapshot.val().train + "</td><td>" 
+    + snapshot.val().desination + "</td><td>"  
+    + snapshot.val().trainFrequency + "</td><td>" 
+    + snapshot.val().nextArrival + "</td><td>" 
+    + snapshot.val().minutesAway + "</td></tr>");
     
 
     // Handle the errors
