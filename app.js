@@ -21,7 +21,7 @@
     //Assign input values to variables
     train = $("#train-name").val().trim();
     destination = $("#destination").val().trim();
-    firstTrain = $("#firstTrain").val().trim();
+    firstTrain = $("#firstTrain").val().trim(), "HH:mm";
     frequency = $("#frequency").val().trim();
 
     // Push to Firebase
@@ -38,34 +38,25 @@
     //Local variables; assign input values to table
 
     var trainFrequency = snapshot.val().frequency;
-    console.log("Frequency: " + trainFrequency);
-    var trainFirst = snapshot.val().firstTrain;
+    console.log(trainFrequency);
+    var trainFirst = snapshot.val().firstTrain
     console.log(trainFirst);
-    var trainFirstConverted = moment(trainFirst, "HH:mm");
-    console.log(trainFirstConverted);
-    var difference = moment().diff(moment(firstTrain), "minutes");
-    console.log("Difference: " + difference);
+    var difference = moment().subtract(moment(trainFirst), "minutes");
+    console.log(difference);
     var remainder = difference % trainFrequency;
-    console.log("Remainder: " + remainder);
+    console.log(remainder);
     var minutesAway = trainFrequency - remainder;
-    console.log("Minutes Away: " + minutesAway);
-    var nextTrain = moment().add(minutesAway, "minutes");
-    console.log("NextTrain @: " + nextTrain);
-    var nextArrival = moment(nextTrain).format("HH:mm");
-    console.log("Next Arrival: " + nextArrival);
-    console.log("___________________________");
+    console.log(minutesAway);
+    //var trainNext = moment().add(minutesAway, "minutes");
+    var nextArrival = moment().add(minutesAway,"minutes").format("HH:mm");
+    console.log(nextArrival);
       
     $("#table-data").append("<tr><td>" 
     + snapshot.val().train + "</td><td>" 
-    + snapshot.val().desination + "</td><td>"  
+    + snapshot.val().destination + "</td><td>"  
     + snapshot.val().trainFrequency + "</td><td>" 
-    + snapshot.val().nextArrival + "</td><td>" 
-    + snapshot.val().minutesAway + "</td></tr>");
-    
-
-    // Handle the errors
-  }, function (errorObject) {
-    console.log("Errors handled: " + errorObject.code);
+    + snapshot.val().minutesAway + "</td><td>" 
+    + snapshot.val().nextArrival + "</td></tr>");
 
   });
 
