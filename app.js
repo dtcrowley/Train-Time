@@ -38,17 +38,17 @@ database.ref().on("child_added", function (snapshot) {
     
     //Local variables; assign input values to table
     var trainFrequency = snapshot.val().frequency;
-    console.log(trainFrequency);
+    // console.log(trainFrequency);
     var trainFirst = snapshot.val().firstTrain
-    console.log(trainFirst);
+    // console.log(trainFirst);
     var difference = moment(currentTime).subtract(moment(trainFirst), "minutes");
-    console.log(difference);
+    // console.log(difference);
     var remainder = difference % trainFrequency;
-    console.log(remainder);
+    // console.log(remainder);
     var minutesAway = trainFrequency - remainder;
-    console.log(minutesAway);
+    // console.log(minutesAway);
     var nextArrival = moment(currentTime).add(minutesAway,"minutes").format("LT");
-    console.log(nextArrival);
+    // console.log(nextArrival);
 
     
     $("#table-data").append("<tr><td>" 
@@ -59,7 +59,7 @@ database.ref().on("child_added", function (snapshot) {
     + nextArrival + "</td></tr>");
 
     }, function(errorObject) {
-    console.log("Errors handled: " + errorObject.code);
+    // console.log("Errors handled: " + errorObject.code);
 });
 
 
