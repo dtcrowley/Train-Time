@@ -41,13 +41,13 @@ database.ref().on("child_added", function (snapshot) {
     // console.log(trainFrequency);
     var trainFirst = snapshot.val().firstTrain
     // console.log(trainFirst);
-    var difference = moment(currentTime).subtract(moment(trainFirst), "minutes");
+    var difference = moment().subtract(moment(trainFirst), "minutes");
     // console.log(difference);
     var remainder = difference % trainFrequency;
     // console.log(remainder);
     var minutesAway = trainFrequency - remainder;
     // console.log(minutesAway);
-    var nextArrival = moment(currentTime).add(minutesAway,"minutes").format("LT");
+    var nextArrival = moment().add(minutesAway,"minutes").format("LT");
     // console.log(nextArrival);
 
     
