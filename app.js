@@ -8,77 +8,58 @@
     messagingSenderId: "202352953043"
   };
   firebase.initializeApp(config);
-
+//Initial variables
   var dataRef = firebase.database();
-
-  // Initial Values
   var train = "";
   var destination = "";
   var firstTrain = "";
-  var frequency = 0;
-  var nextArrival;
-  var minutesAway;
-
+  var frequency = "";
+ 
   // Capture Button Click
   $("#submitBtn").on("click", function (event) {
+    
     event.preventDefault();
-
+    //Assign input values to variables
     train = $("#trainName").val().trim();
     destination = $("#destination").val().trim();
-    firstTrain = moment($("#firstTrain").val().trim()).format("HH:mm");
+    firstTrain = $("#firstTrain").val().trim();
     frequency = $("#frequency").val().trim();
 
-    var firstTimeConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
-    console.log(firstTimeConverted);
-
-    // Code for the push
+    // Code for the push to Firebase
     dataRef.ref().push({
       train: train,
       destination: destination,
-      firstTrain: firstTimeConverted,
-      frequncy: frequency,
+      firstTrain: firstTrain,
+      frequency: frequency,
     });
   });
 
-  // Firebase watcher + initial loader HINT: .on("value")
+  // Firebase watcher + initial loader 
   dataRef.ref().on("child_added", function (snapshot) {
-    // Log everything that"s coming out of snapshot
-    console.log(snapshot.val());
-    console.log(snapshot.val().train);
-    console.log(snapshot.val().destination);
-    console.log(snapshot.val().firstTrain);
-    console.log(snapshot.val().frequency);
-
-    // Change the HTML to reflect
-    database.ref().on("child_added", function(snapshot) {
-        console.log(snapshot.val())
-    
-        // Current Time
-    var currentTime = moment();
-        console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
-    
-        // Difference between the times
-    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-        console.log("DIFFERENCE IN TIME: " + diffTime);
-    
-        // Time apart (remainder)
-    var remainder = diffTime % frequency;
-        console.log(remainder);
-    
-        // Minute Until Train
-    var minutesAway = frequency - remainder;
-        console.log("MINUTES TILL TRAIN: " + minutesAway);
-    
-        // Next Train
-    var nextArrival = moment().add(minutesAway, "minutes");
-        console.log("ARRIVAL TIME: " + moment(nextArrival).format("hh:mm"));
-
+    //Local variables; assign input values to table
+    console.log(train);
+    console.log(destination);
+    var trainFrequency = snapshot.val().frequency;
+    console.log("Frequency: " + trainFrequency);
+    var trainFirst = snapshot.val().firstTrain;
+    console.log(trainFirst);
+    var trainFirstConverted = moment(trainFirst, "HH:mm");
+    console.log(trainFirstConverted);
+    var difference = moment().diff(moment(firstTrain), "minutes");
+    console.log("Difference: " + difference);
+    var remainder = difference % trainFrequency;
+    console.log("Remainder: " + remainder);
+    var minutesAway = trainFrequency - remainder;
+    console.log("Minutes Away: " + minutesAway);
+    var nextTrain = moment().add(minutesAway, "minutes");
+    console.log("NextTrain: " + nextTrain);
+    var nextArrival = moment(nextTrain).format("HH:mm");
+    console.log("Next Arrival: " + nextArrival);
+    console.log("___________________________");
+      
     $("#table-data").append("<tr><td>" + snapshot.val().train + "</td><td>" + snapshot.val().desination + "</td><td>"  
-    + snapshot.val().frequency + "</td><td>" +snapshot.val().nextArrival + "</td><td>" + snapshot.val().minutesAway + "</td></tr>");
+    + snapshot.val().trainFrequency + "</td><td>" +snapshot.val().nextArrival + "</td><td>" + snapshot.val().minutesAway + "</td></tr>");
     
-    
-    
-    });
 
     // Handle the errors
   }, function (errorObject) {
