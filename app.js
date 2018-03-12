@@ -31,6 +31,11 @@ $("#submitBtn").on("click", function (event) {
         firstTrain: firstTrain,
         frequency: frequency
       });
+
+      train = $("#train-name").val("");
+      destination = $("#destination").val("");
+      frequency = $("#frequency").val("");
+      firstTrain = $("#firstTrain").val("");
 });
 
   // Firebase watcher + initial loader 
